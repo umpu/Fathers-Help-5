@@ -38,19 +38,17 @@ struct ContentView: View {
             }
             
             RoundedRectangle(cornerRadius: 10)
-                .foregroundColor(.black)
-                .blendMode(.multiply)
+                .foregroundColor(.white)
+                .blendMode(.difference)
+                .overlay(.blendMode(.hue))
+                .overlay(Color.white.blendMode(.overlay))
+                .overlay(Color.black.blendMode(.overlay))
                 .frame(width: 100, height: 100)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .position(location)
                 .gesture(
-                    simpleDrag.simultaneously(with: fingerDrag) // 4
+                    simpleDrag.simultaneously(with: fingerDrag)
                 )
-            if let fingerLocation = fingerLocation { // 5
-                Circle()
-                    .stroke(Color.green, lineWidth: 2)
-                    .frame(width: 44, height: 44)
-                    .position(fingerLocation)
-            }
         }
         .ignoresSafeArea()
     }

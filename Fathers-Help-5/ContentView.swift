@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var location: CGPoint = CGPoint(x: 180, y: 400)
     @State private var fingerLocation: CGPoint?
+    private var colors = [Color.white, .pink, .yellow, .black]
     
     var simpleDrag: some Gesture {
         DragGesture()
@@ -31,10 +32,9 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                Rectangle().foregroundStyle(.white)
-                Rectangle().foregroundStyle(.pink)
-                Rectangle().foregroundStyle(.yellow)
-                Rectangle().foregroundStyle(.black)
+                ForEach(colors, id: \.self) { color in
+                    Rectangle().foregroundStyle(color)
+                }
             }
             
             RoundedRectangle(cornerRadius: 10)

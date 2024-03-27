@@ -7,27 +7,22 @@
 
 import SwiftUI
 
+struct DragView: View {
+    var body: some View {
+        RoundedRectangle(cornerRadius: 10)
+            .blendMode(.difference)
+            .overlay(.blendMode(.hue))
+            .overlay(Color.white.blendMode(.overlay))
+            .overlay(Color.black.blendMode(.overlay))
+            .frame(width: 100, height: 100)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .foregroundStyle(.white)
+    }
+}
+
 struct ContentView: View {
-    @State private var location: CGPoint = CGPoint(x: 180, y: 400)
-    @State private var fingerLocation: CGPoint?
+    @State private var offset = CGSize.zero
     private var colors = [Color.white, .pink, .yellow, .black]
-    
-    var simpleDrag: some Gesture {
-        DragGesture()
-            .onChanged { value in
-                self.location = value.location
-            }
-    }
-    
-    var fingerDrag: some Gesture {
-        DragGesture()
-            .onChanged { value in
-                self.fingerLocation = value.location
-            }
-            .onEnded { value in
-                self.fingerLocation = nil
-            }
-    }
     
     var body: some View {
         ZStack {
@@ -37,17 +32,18 @@ struct ContentView: View {
                 }
             }
             
-            RoundedRectangle(cornerRadius: 10)
-                .foregroundColor(.white)
-                .blendMode(.difference)
-                .overlay(.blendMode(.hue))
-                .overlay(Color.white.blendMode(.overlay))
-                .overlay(Color.black.blendMode(.overlay))
-                .frame(width: 100, height: 100)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .position(location)
+            DragView()
+                .offset(x: offset.width, y: offset.height)
                 .gesture(
-                    simpleDrag.simultaneously(with: fingerDrag)
+                    DragGesture()
+                        .onChanged { value in
+                            offset = value.translation
+                        }
+                        .onEnded { _ in
+                            withAnimation {
+                                offset = .zero
+                            }
+                        }
                 )
         }
         .ignoresSafeArea()
